@@ -176,7 +176,7 @@ struct sized_string
             _out << _Src._M_arr[i];
         return _out;
     }
-    constexpr friend istream &
+    friend istream &
     operator>> (istream &_in, sized_string &_Src) noexcept
     {
         static string _tmp;
