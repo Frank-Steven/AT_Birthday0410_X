@@ -1191,30 +1191,29 @@ struct Image {
 			}
 		}
 	}
-	constexpr int about_equal(double x) {
-		int tmp = int(x);
-		return tmp+(x-tmp>=0.5);
-	}
-	void resize(double _SizeResetValue) {
-		char tmp[m+1][n+1];
-		double _x = 0, _y = 0;
+	
+	void resize(const double &x_m, const double &y_m) {
+	char tmp[M][N];
+		double _x = 1, _y = 1;
 		int l, u, r, d;
 		for(int i = 1; i < m; ++i) {
 			for(int j = 1; j < n; ++j) {
-				l = about_equal(_x), r = about_equal(_x+_SizeResetValue);
-				u = about_equal(_y), d = about_equal(_y+_SizeResetValue);
-				for(int x = l; x < r; ++x) {
-					for(int y = u; y < d; ++y) {
+				l = _x, r = _x+x_m;
+				u = _y, d = _y+y_m;
+				for(int x = l; x <= r; ++x) {
+					for(int y = u; y <= d; ++y) {
 						tmp[x][y] = s[i][j];
 					}
 				}
-				_y += _SizeResetValue;
+				_y += y_m;
 			}
-			_x += _SizeResetValue;
+			_y = 1;
+			_x += x_m;
 		}
 		memcpy(s,tmp,sizeof tmp);
 		n = d, m = r;
 	}
+
 	void midPoint(int &midPointX, int &midPointY) {
 		midPointX = 0, midPointY = 0;
 		int cnt = 0;
@@ -1282,7 +1281,7 @@ int tot;
 void init() {
 	input.input();
 	input.denoise();
-	// input.log();
+	input.log();
 	for (int i = 0; i < 16; i ++) {
 		digit[i].init<65, 40>(Digit[i]);
 		temp_digit = new Image[2];
@@ -1294,11 +1293,11 @@ void init() {
 	}
 	number = new Image[3001];
 	input.split(tot, &number);
-	// fprintf(stderr, "%d\n", tot);
-	// for (int i = 1; i <= tot; i ++) {
-		// number[i].log();
-	// }
-
+	fprintf(stderr, "%d\n", tot);
+	for (int i = 1; i <= tot; i ++) {
+		number[i].resize(2,2);
+		number[i].log();
+	}
 } 
 
 int main() {
