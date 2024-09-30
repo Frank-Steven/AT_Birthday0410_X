@@ -14,7 +14,7 @@ T min(T x, T y) {return x < y ? x : y;}
 double rad(double r) {return r / 180 * PI;}
 
 
-const int N = 10000, M = 70, C = 17;
+const int N = 10000, M = 70, C = 15;
 const int dx[] = {1, 0, -1, 0, 1, 1, -1, -1};
 const int dy[] = {0, 1, 0, -1, 1, -1, 1, -1};
 const char stringBase[] = "0123456789()+-*/";
