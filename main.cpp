@@ -1,10 +1,16 @@
 #include <cstdio>
 #include <cstring>
+#include <cmath>
+
+const double PI = acos(-1);
 
 template <typename T> 
-inline T max(T x, T y) {return x > y ? x : y;}
+T max(T x, T y) {return x > y ? x : y;}
 template <typename T> 
-inline T min(T x, T y) {return x < y ? x : y;}
+T min(T x, T y) {return x < y ? x : y;}
+
+double rad(double r) {return r / 180 * PI;}
+
 
 const int N = 10000, M = 70;
 const int dx[] = {1, 0, -1, 0, 1, 1, -1, -1};
@@ -1209,15 +1215,70 @@ struct Image {
 		memcpy(s,tmp,sizeof tmp);
 		n = h, m = w;
 	}
+	void midPoint(int &midPointX, int &midPointY) {
+		midPointX = 0, midPointY = 0;
+		int cnt = 0;
+		for (int i = 1; i <= n; i ++) {
+			for (int j = 1; j <= m; j ++) {
+				if (s[i][j] == '#') {
+					midPointX += i;
+					midPointY += j;
+					cnt ++;
+				}
+			}
+		}
+		midPointX /= cnt;
+		midPointY /= cnt;
+	}
+	void rotate(double r) {
+		int centerX, centerY;
+		midPoint(centerX, centerY);
+		static char res[M][N];
+		int minX = 1e9, maxX = 0, minY = 1e9, maxY = 0;
+		for (int i = 1; i <= n; i ++) {
+			for (int j = 1; j <= m; j ++) {
+				if (s[i][j] == '#') {
+					int x = cos(r) * (i - centerX) - sin(r) * (j - centerY) + centerX;
+					int y = sin(r) * (i - centerX) + cos(r) * (j - centerY) + centerY;
+					minX = min(minX, x);
+					maxX = max(maxX, x);
+					minY = min(minY, y);
+					maxY = max(maxY, y);
+				}
+			}
+		}
+		int _n = maxX - minX + 1;
+		int _m = maxY - minY + 1;
+		for (int i = 1; i <= _n; i ++) {
+			for (int j = 1; j <= _m; j ++) {
+				res[i][j] = '.';
+			}
+		}
+		for (int i = 1; i <= n; i ++) {
+			for (int j = 1; j <= m; j ++) {
+				if (s[i][j] == '#') {
+					int x = cos(r) * (i - centerX) - sin(r) * (j - centerY) + centerX;
+					int y = sin(r) * (i - centerX) + cos(r) * (j - centerY) + centerY;
+					res[x - minX + 1][y - minY + 1] = '#';
+				}
+			}
+		}
+		for (int i = 1; i <= _n; i ++) {
+			for (int j = 1; j <= _m; j ++) {
+				s[i][j] = res[i][j];
+			}
+		}
+		n = _n, m = _m;
+	}
 };
 
 Image input, digit[17], *number, *temp_digit;
 int tot;
 
 void init() {
-	input.input();
-	input.denoise();
-	input.log();
+	// input.input();
+	// input.denoise();
+	// input.log();
 	for (int i = 0; i < 16; i ++) {
 		digit[i].init<65, 40>(Digit[i]);
 		temp_digit = new Image[2];
@@ -1227,22 +1288,22 @@ void init() {
 		digit[i].log();
 		delete[] temp_digit;
 	}
-	number = new Image[3001];
-	input.split(tot, &number);
-	fprintf(stderr, "%d\n", tot);
-	for (int i = 1; i <= tot; i ++) {
-		number[i].log();
-	}
-	
+	// number = new Image[3001];
+	// input.split(tot, &number);
+	// fprintf(stderr, "%d\n", tot);
+	// for (int i = 1; i <= tot; i ++) {
+	// 	number[i].log();
+	// }
+	digit[1].rotate(rad(10));
+	digit[1].log();
 } 
 
 int main() {
-	freopen("input/030.txt", "r", stdin);
-	freopen("log.txt", "w", stderr); 
+	// freopen("input\030.txt", "r", stdin);
+	// freopen("log.txt", "w", stderr); 
 	scanf("%d", &t);
 	
 	init();
-	
 	
 	return 0;
 }
