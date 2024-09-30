@@ -1195,26 +1195,25 @@ struct Image {
 		int tmp = int(x);
 		return tmp+(x-tmp>=0.5);
 	}
-	void resize(int w, int h) {
+	void resize(double _SizeResetValue) {
 		char tmp[m+1][n+1];
 		double _x = 0, _y = 0;
-		double x_m = (double)w/m, y_m = (double)h/n;
 		int l, u, r, d;
-		for(int i = 1; i <= m; ++i) {
-			for(int j = 1; j <= n; ++j) {
-				l = about_equal(_x), r = about_equal(_x+x_m);
-				u = about_equal(_y), d = about_equal(_y+y_m);
+		for(int i = 1; i < m; ++i) {
+			for(int j = 1; j < n; ++j) {
+				l = about_equal(_x), r = about_equal(_x+_SizeResetValue);
+				u = about_equal(_y), d = about_equal(_y+_SizeResetValue);
 				for(int x = l; x < r; ++x) {
 					for(int y = u; y < d; ++y) {
 						tmp[x][y] = s[i][j];
 					}
 				}
-				_y += y_m;
+				_y += _SizeResetValue;
 			}
-			_x += x_m;
+			_x += _SizeResetValue;
 		}
 		memcpy(s,tmp,sizeof tmp);
-		n = h, m = w;
+		n = d, m = r;
 	}
 	void midPoint(int &midPointX, int &midPointY) {
 		midPointX = 0, midPointY = 0;
@@ -1272,7 +1271,8 @@ struct Image {
 		n = _n, m = _m;
 	}
 	void loss(double sx, double sy) {
-		// 我觉得自己好成功
+		// 我觉得自己好失败
+		// 我觉得自己好失败
 	}
 };
 
