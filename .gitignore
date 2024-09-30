@@ -1,8 +1,4 @@
-.vscode/c_cpp_properties.json
-.vscode/launch.json
-.vscode/settings.json
-.vscode/tasks.json
-output/main.exe
-output/main_legacy.exe
+.vscode
+output
 log.txt
 main.exe
