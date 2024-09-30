@@ -1272,7 +1272,8 @@ struct Image {
 		n = _n, m = _m;
 	}
 	void loss(double sx, double sy) {
-		// 我觉得自己好成功
+		// 我觉得自己好失败
+		// 我觉得自己好失败
 	}
 };
 
