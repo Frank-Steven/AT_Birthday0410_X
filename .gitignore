@@ -4,3 +4,5 @@
 .vscode/tasks.json
 output/main.exe
 output/main_legacy.exe
+log.txt
+main.exe

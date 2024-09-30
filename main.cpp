@@ -1180,7 +1180,7 @@ struct Image {
 				if (s[i][j] != '#') continue;
 				int siz_, xmin, xmax, ymin, ymax;
 				bfs(i, j, siz_, xmin, xmax, ymin, ymax);
-				fprintf(stderr, "%d %d %d %d %d\n", siz_, xmin, xmax, ymin, ymax);
+				// fprintf(stderr, "%d %d %d %d %d\n", siz_, xmin, xmax, ymin, ymax);
 				if (siz_ <= 20) continue;
 				siz ++;
 				(*res)[siz].n = xmax - xmin + 1;
@@ -1286,7 +1286,7 @@ void init() {
 		int temp_size;
 		digit[i].split(temp_size, &temp_digit);
 		digit[i] = temp_digit[1];
-		digit[i].log();
+		// digit[i].log();
 		delete[] temp_digit;
 	}
 	// number = new Image[3001];
@@ -1300,7 +1300,7 @@ void init() {
 } 
 
 int main() {
-	// freopen("input\030.txt", "r", stdin);
+	freopen("input\030.txt", "r", stdin);
 	freopen("log.txt", "w", stderr); 
 	scanf("%d", &t);
 	
