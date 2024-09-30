@@ -1193,10 +1193,11 @@ struct Image {
 		char tmp[m+1][n+1];
 		double x = 0, y = 0;
 		double x_m = (double)w/m, y_m = (double)h/n;
+		int l, u, r, d;
 		for(int i = 1; i <= m; ++i) {
 			for(int j = 1; j <= n; ++j) {
-				int l = about_equal(x), r = about_equal(x+x_m);
-				int u = about_equal(y), d = about_equal(y+y_m);
+				l = about_equal(x), r = about_equal(x+x_m);
+				u = about_equal(y), d = about_equal(y+y_m);
 				for(int x = l; x < r; ++x) {
 					for(int y = u; y < d; ++y) {
 						tmp[x][y] = s[i][j];
