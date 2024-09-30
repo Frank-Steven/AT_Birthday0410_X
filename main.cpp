@@ -14,7 +14,7 @@ T min(T x, T y) {return x < y ? x : y;}
 double rad(double r) {return r / 180 * PI;}
 
 
-const int N = 10000, M = 70, C = 15;
+const int N = 10000, M = 70, C = 17;
 const int dx[] = {1, 0, -1, 0, 1, 1, -1, -1};
 const int dy[] = {0, 1, 0, -1, 1, -1, 1, -1};
 const char stringBase[] = "0123456789()+-*/";
@@ -1394,7 +1394,7 @@ void trans() {
 	for (int i = 1; i <= tot; i ++) {
 		if (number[i].n * 1.0 < number[i].m * 0.8) {
 			expr[i] = '-';
-			// std::cerr << '-';
+			// std::cerr << '-' << '\n';
 			continue;
 		}
 		char res;
@@ -1405,6 +1405,7 @@ void trans() {
 			}
 			for (int k = 0; k <= C; k ++) {
 				double sim = number[i].simialr(charBase[j][k]);
+				if (sim < 0.5) break; 
 				if (sim > maxSim) {
 					maxSim = sim;
 					res = stringBase[j];
@@ -1412,9 +1413,7 @@ void trans() {
 			}
 		}
 		expr[i] = res;
-		// std::cerr << res;
 	}
-	// std::cerr << "\n";
 }
 
 
