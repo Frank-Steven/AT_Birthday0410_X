@@ -1382,7 +1382,7 @@ void init() {
 			double r = R(gen), sx = S(gen), sy = S(gen);
 			charBase[i][j].rotate(rad(r));
 			charBase[i][j].loss(sx, sy);
-			charBase[i][j].log();
+			// charBase[i][j].log();
 		}
 	}
 
@@ -1394,6 +1394,7 @@ void trans() {
 	for (int i = 1; i <= tot; i ++) {
 		if (number[i].n * 1.0 < number[i].m * 0.8) {
 			expr[i] = '-';
+			// std::cerr << '-';
 			continue;
 		}
 		char res;
@@ -1411,7 +1412,9 @@ void trans() {
 			}
 		}
 		expr[i] = res;
+		// std::cerr << res;
 	}
+	// std::cerr << "\n";
 }
 
 
@@ -1479,8 +1482,8 @@ int solve() {
 }
 
 int main() {
-	freopen("input/030.txt", "r", stdin);
-	freopen("log.txt", "w", stderr); 
+	// freopen("input/030.txt", "r", stdin);
+	// freopen("log.txt", "w", stderr); 
 
 	scanf("%d", &t);
 
