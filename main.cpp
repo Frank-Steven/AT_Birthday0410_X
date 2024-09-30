@@ -1143,12 +1143,12 @@ struct Image {
 		Denoise();
 	}
 	void bfs(int sx, int sy, int &size, int &xmin, int &xmax, int &ymin, int &ymax) {
-		static int Qx[N * M], Qy[N * M], h, t;
+		static int Qx[N * M], Qy[N * M], h, _t;
 		xmin = 1e9, xmax = 0, ymin = 1e9, ymax = 0, size = 0;
-		h = 0, t = 0;
-		Qx[t] = sx, Qy[t] = sy;
+		h = 0, _t = 0;
+		Qx[_t] = sx, Qy[_t] = sy;
 		vis[sx][sy] = 1;
-		while (h <= t) {
+		while (h <= _t) {
 			int nowx = Qx[h], nowy = Qy[h]; 
 			h ++, size ++;
 			xmin = min(xmin, nowx);
@@ -1161,7 +1161,7 @@ struct Image {
 				if (vis[xx][yy]) continue;
 				if (s[xx][yy] == '.') continue;
 				vis[xx][yy] = 1;
-				t ++, Qx[t] = xx, Qy[t] = yy;
+				_t ++, Qx[_t] = xx, Qy[_t] = yy;
 			}
 		}
 	}
@@ -1191,21 +1191,21 @@ struct Image {
 	}
 	void resize(int w, int h) {
 		char tmp[m+1][n+1];
-		double x = 0, y = 0;
+		double _x = 0, _y = 0;
 		double x_m = (double)w/m, y_m = (double)h/n;
 		int l, u, r, d;
 		for(int i = 1; i <= m; ++i) {
 			for(int j = 1; j <= n; ++j) {
-				l = about_equal(x), r = about_equal(x+x_m);
-				u = about_equal(y), d = about_equal(y+y_m);
+				l = about_equal(_x), r = about_equal(_x+x_m);
+				u = about_equal(_y), d = about_equal(_y+y_m);
 				for(int x = l; x < r; ++x) {
 					for(int y = u; y < d; ++y) {
 						tmp[x][y] = s[i][j];
 					}
 				}
-				y += y_m;
+				_y += y_m;
 			}
-			x += x_m;
+			_x += x_m;
 		}
 		memcpy(s,tmp,sizeof tmp);
 		n = h, m = w;
