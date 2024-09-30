@@ -1271,14 +1271,17 @@ struct Image {
 		}
 		n = _n, m = _m;
 	}
+	void loss(double sx, double sy) {
+
+	}
 };
 
 Image input, digit[17], *number, *temp_digit;
 int tot;
 
 void init() {
-	// input.input();
-	// input.denoise();
+	input.input();
+	input.denoise();
 	// input.log();
 	for (int i = 0; i < 16; i ++) {
 		digit[i].init<65, 40>(Digit[i]);
@@ -1289,18 +1292,17 @@ void init() {
 		// digit[i].log();
 		delete[] temp_digit;
 	}
-	// number = new Image[3001];
-	// input.split(tot, &number);
+	number = new Image[3001];
+	input.split(tot, &number);
 	// fprintf(stderr, "%d\n", tot);
 	// for (int i = 1; i <= tot; i ++) {
-	// 	number[i].log();
+		// number[i].log();
 	// }
-	digit[1].rotate(rad(10));
-	digit[1].log();
+
 } 
 
 int main() {
-	freopen("input\030.txt", "r", stdin);
+	freopen("input/030.txt", "r", stdin);
 	freopen("log.txt", "w", stderr); 
 	scanf("%d", &t);
 	
