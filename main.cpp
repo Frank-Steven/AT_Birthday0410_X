@@ -1358,8 +1358,8 @@ void init() {
 } 
 
 int main() {
-	freopen("input/030.txt", "r", stdin);
-	freopen("log.txt", "w", stderr); 
+	// freopen("input/030.txt", "r", stdin);
+	// freopen("log.txt", "w", stderr); 
 	scanf("%d", &t);
 	
 	init();
