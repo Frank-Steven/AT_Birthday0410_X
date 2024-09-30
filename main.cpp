@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <cstring>
 #include <cmath>
+#include <random>
+#include <iostream>
 
 const double PI = acos(-1);
 
@@ -12,7 +14,7 @@ T min(T x, T y) {return x < y ? x : y;}
 double rad(double r) {return r / 180 * PI;}
 
 
-const int N = 10000, M = 70;
+const int N = 10000, M = 70, C = 15;
 const int dx[] = {1, 0, -1, 0, 1, 1, -1, -1};
 const int dy[] = {0, 1, 0, -1, 1, -1, 1, -1};
 
@@ -1235,7 +1237,7 @@ struct Image {
 		int centerX, centerY;
 		midPoint(centerX, centerY);
 		static char res[M][N];
-		int minX = 1e9, maxX = 0, minY = 1e9, maxY = 0;
+		int minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
 		for (int i = 1; i <= n; i ++) {
 			for (int j = 1; j <= m; j ++) {
 				if (s[i][j] == '#') {
@@ -1272,34 +1274,83 @@ struct Image {
 		n = _n, m = _m;
 	}
 	void loss(double sx, double sy) {
-		// 我觉得自己好失败
-		// 我觉得自己好失败
+		static char res[M][N];
+		int minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
+		for (int i = 1; i <= n; i ++) {
+			for (int j = 1; j <= m; j ++) {
+				if (s[i][j] == '#') {
+					int x = i + sy * j, y = sx * i + j;
+					minX = min(minX, x);
+					maxX = max(maxX, x);
+					minY = min(minY, y);
+					maxY = max(maxY, y);
+				}
+			}
+		}
+		int _n = maxX - minX + 1;
+		int _m = maxY - minY + 1;
+		for (int i = 1; i <= _n; i ++) {
+			for (int j = 1; j <= _m; j ++) {
+				res[i][j] = '.';
+			}
+		}
+		for (int i = 1; i <= n; i ++) {
+			for (int j = 1; j <= m; j ++) {
+				if (s[i][j] == '#') {
+					int x = i + sy * j, y = sx * i + j;
+					res[x - minX + 1][y - minY + 1] = '#';
+				}
+			}
+		}
+		for (int i = 1; i <= _n; i ++) {
+			for (int j = 1; j <= _m; j ++) {
+				s[i][j] = res[i][j];
+			}
+		}
+		n = _n, m = _m;
 	}
 };
 
-Image input, digit[17], *number, *temp_digit;
+Image input, digit[17];
+Image *number, *temp_digit;
+Image charBase[17][C + 1];
 int tot;
 
 void init() {
 	input.input();
 	input.denoise();
-	// input.log();
 	for (int i = 0; i < 16; i ++) {
 		digit[i].init<65, 40>(Digit[i]);
 		temp_digit = new Image[2];
 		int temp_size;
 		digit[i].split(temp_size, &temp_digit);
 		digit[i] = temp_digit[1];
-		// digit[i].log();
 		delete[] temp_digit;
 	}
-	number = new Image[3001];
-	input.split(tot, &number);
-	// fprintf(stderr, "%d\n", tot);
-	// for (int i = 1; i <= tot; i ++) {
-		// number[i].log();
-	// }
+	
+	digit[15].log();
+	digit[15].rotate(rad(11.8409));
+	digit[15].log();
 
+	// std::random_device rd;
+  	// std::mt19937 gen(rd());
+	// std::uniform_real_distribution <> R (-15, 15);
+	// std::uniform_real_distribution <> S (-0.1, 0.1);
+
+	// for (int i = 0; i < 16; i ++) {
+	// 	charBase[i][0] = digit[i];
+	// 	for (int j = 1; j <= C; j ++) {
+	// 		charBase[i][j] = digit[i];
+	// 		double r = R(gen), sx = S(gen), sy = S(gen);
+	// 		std::cerr << r << "\n";
+	// 		charBase[i][j].rotate(rad(r));
+	// 		// charBase[i][j].loss(sx, sy);
+	// 		charBase[i][j].log();
+	// 	}
+	// }
+	// number = new Image[3001];
+	// input.split(tot, &number);
+	
 } 
 
 int main() {
