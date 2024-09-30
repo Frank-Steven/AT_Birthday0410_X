@@ -1197,31 +1197,44 @@ struct Image {
 			}
 		}
 	}
-	constexpr int about_equal(double x) {
-		int tmp = int(x);
-		return tmp+(x-tmp>=0.5);
-	}
-	void resize(int w, int h) {
-		char tmp[m+1][n+1];
-		double _x = 0, _y = 0;
-		double x_m = (double)w/m, y_m = (double)h/n;
-		int l, u, r, d;
-		for(int i = 1; i <= m; ++i) {
-			for(int j = 1; j <= n; ++j) {
-				l = about_equal(_x), r = about_equal(_x+x_m);
-				u = about_equal(_y), d = about_equal(_y+y_m);
-				for(int x = l; x < r; ++x) {
-					for(int y = u; y < d; ++y) {
-						tmp[x][y] = s[i][j];
-					}
+	
+	void resize(double mx, double my) {
+		static char res[M][N];
+		int minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
+		for (int i = 1; i <= n; i ++) {
+			for (int j = 1; j <= m; j ++) {
+				if (s[i][j] == '#') {
+					int x = i * mx, y = j * my;
+					minX = min(minX, x);
+					maxX = max(maxX, x);
+					minY = min(minY, y);
+					maxY = max(maxY, y);
 				}
-				_y += y_m;
 			}
-			_x += x_m;
 		}
-		memcpy(s,tmp,sizeof tmp);
-		n = h, m = w;
+		int _n = maxX - minX + 1;
+		int _m = maxY - minY + 1;
+		for (int i = 1; i <= _n; i ++) {
+			for (int j = 1; j <= _m; j ++) {
+				res[i][j] = '.';
+			}
+		}
+		for (int i = 1; i <= n; i ++) {
+			for (int j = 1; j <= m; j ++) {
+				if (s[i][j] == '#') {
+					int x = i * mx, y = j * my;
+					res[x - minX + 1][y - minY + 1] = '#';
+				}
+			}
+		}
+		for (int i = 1; i <= _n; i ++) {
+			for (int j = 1; j <= _m; j ++) {
+				s[i][j] = res[i][j];
+			}
+		}
+		n = _n, m = _m;
 	}
+
 	void midPoint(int &midPointX, int &midPointY) {
 		midPointX = 0, midPointY = 0;
 		int cnt = 0;
@@ -1331,10 +1344,10 @@ void init() {
 		digit[i] = temp_digit[1];
 		delete[] temp_digit;
 	}
-	
-	digit[15].log();
-	digit[15].rotate(rad(11.8409));
-	digit[15].log();
+
+	digit[0].log();
+	digit[0].resize(0.7, 0.7);
+	digit[0].log();
 
 	// std::random_device rd;
   	// std::mt19937 gen(rd());
@@ -1348,7 +1361,7 @@ void init() {
 	// 		double r = R(gen), sx = S(gen), sy = S(gen);
 	// 		std::cerr << r << "\n";
 	// 		charBase[i][j].rotate(rad(r));
-	// 		// charBase[i][j].loss(sx, sy);
+	// 		charBase[i][j].loss(sx, sy);
 	// 		charBase[i][j].log();
 	// 	}
 	// }
