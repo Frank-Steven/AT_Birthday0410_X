@@ -1114,8 +1114,12 @@ struct Image {
 	}
 	void log() {
 		fprintf(stderr, "%d %d\n", n, m);
-		for (int i = 1; i <= n; i ++)
-			fprintf(stderr, "%s\n", s[i] + 1);
+		for (int i = 1; i <= n; i ++) {
+			for (int j = 1; j <= m; j ++) {
+				fprintf(stderr, "%c", s[i][j]);
+			}
+			fprintf(stderr, "\n");
+		}
 	}
 	void Denoise() {
 		static char res[M][N];
