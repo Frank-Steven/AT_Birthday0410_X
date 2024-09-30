@@ -17,6 +17,7 @@ double rad(double r) {return r / 180 * PI;}
 const int N = 10000, M = 70, C = 15;
 const int dx[] = {1, 0, -1, 0, 1, 1, -1, -1};
 const int dy[] = {0, 1, 0, -1, 1, -1, 1, -1};
+const char stringBase[] = "0123456789()+-*/";
 
 char Digit[16][65][40] = {{
 "......................................",
@@ -1098,6 +1099,7 @@ bool vis[M][N];
 struct Image {
 	int n, m;
 	char s[M][N];
+
 	template <size_t _n, size_t _m>
 	void init(char str[_n][_m]) {
 		n = _n, m = _m;
@@ -1107,11 +1109,13 @@ struct Image {
 			}
 		}
 	}
+
 	void input () {
 		scanf("%d%d", &m, &n);
 		for (int i = 1; i <= n; i ++)
 			scanf("%s", s[i] + 1);	
 	}
+
 	void log() {
 		fprintf(stderr, "%d %d\n", n, m);
 		for (int i = 1; i <= n; i ++) {
@@ -1121,6 +1125,7 @@ struct Image {
 			fprintf(stderr, "\n");
 		}
 	}
+
 	void Denoise() {
 		static char res[M][N];
 		for (int i = 1; i <= n; i ++) {
@@ -1150,10 +1155,12 @@ struct Image {
 			}
 		}
 	}
+
 	void denoise() {
 		Denoise();
 		Denoise();
 	}
+
 	void bfs(int sx, int sy, int &size, int &xmin, int &xmax, int &ymin, int &ymax) {
 		static int Qx[N * M], Qy[N * M], h, _t;
 		xmin = 1e9, xmax = 0, ymin = 1e9, ymax = 0, size = 0;
@@ -1177,6 +1184,7 @@ struct Image {
 			}
 		}
 	}
+
 	void split(int &siz, Image** res) {
 		memset(vis, 0, sizeof(vis));
 		siz = 0;
@@ -1186,7 +1194,6 @@ struct Image {
 				if (s[i][j] != '#') continue;
 				int siz_, xmin, xmax, ymin, ymax;
 				bfs(i, j, siz_, xmin, xmax, ymin, ymax);
-				// fprintf(stderr, "%d %d %d %d %d\n", siz_, xmin, xmax, ymin, ymax);
 				if (siz_ <= 20) continue;
 				siz ++;
 				(*res)[siz].n = xmax - xmin + 1;
@@ -1250,6 +1257,7 @@ struct Image {
 		midPointX /= cnt;
 		midPointY /= cnt;
 	}
+
 	void rotate(double r) {
 		int centerX, centerY;
 		midPoint(centerX, centerY);
@@ -1290,6 +1298,7 @@ struct Image {
 		}
 		n = _n, m = _m;
 	}
+
 	void loss(double sx, double sy) {
 		static char res[M][N];
 		int minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
@@ -1326,16 +1335,22 @@ struct Image {
 		}
 		n = _n, m = _m;
 	}
+
+	double simialr(Image &model) {
+			
+	}
 };
 
 Image input, digit[17];
 Image *number, *temp_digit;
 Image charBase[17][C + 1];
 int tot;
+char expr[N];
 
 void init() {
 	input.input();
 	input.denoise();
+
 	for (int i = 0; i < 16; i ++) {
 		digit[i].init<65, 40>(Digit[i]);
 		temp_digit = new Image[2];
@@ -1345,37 +1360,62 @@ void init() {
 		delete[] temp_digit;
 	}
 
-	digit[0].log();
-	digit[0].resize(0.7, 0.7);
-	digit[0].log();
+	std::random_device rd;
+  	std::mt19937 gen(rd());
+	std::uniform_real_distribution <> R (-15, 15);
+	std::uniform_real_distribution <> S (-0.1, 0.1);
 
-	// std::random_device rd;
-  	// std::mt19937 gen(rd());
-	// std::uniform_real_distribution <> R (-15, 15);
-	// std::uniform_real_distribution <> S (-0.1, 0.1);
+	for (int i = 0; i < 16; i ++) {
+		charBase[i][0] = digit[i];
+		for (int j = 1; j <= C; j ++) {
+			charBase[i][j] = digit[i];
+			double r = R(gen), sx = S(gen), sy = S(gen);
+			charBase[i][j].rotate(rad(r));
+			charBase[i][j].loss(sx, sy);
+			charBase[i][j].log();
+		}
+	}
 
-	// for (int i = 0; i < 16; i ++) {
-	// 	charBase[i][0] = digit[i];
-	// 	for (int j = 1; j <= C; j ++) {
-	// 		charBase[i][j] = digit[i];
-	// 		double r = R(gen), sx = S(gen), sy = S(gen);
-	// 		std::cerr << r << "\n";
-	// 		charBase[i][j].rotate(rad(r));
-	// 		charBase[i][j].loss(sx, sy);
-	// 		charBase[i][j].log();
-	// 	}
-	// }
-	// number = new Image[3001];
-	// input.split(tot, &number);
-	
+	number = new Image[3001];
+	input.split(tot, &number);
 } 
+
+void trans() {
+	for (int i = 1; i <= tot; i ++) {
+		if (number[i].n * 1.0 < number[i].m * 0.8) {
+			expr[i] = '-';
+			continue;
+		}
+		char res;
+		double maxSim = 0;
+		for (int j = 0; j < 16; j ++) {
+			if (j == 13) {
+				continue;
+			}
+			for (int k = 0; k <= C; k ++) {
+				double sim = number[i].simialr(charBase[j][k]);
+				if (sim > maxSim) {
+					maxSim = sim;
+					res = stringBase[j];
+				}
+			}
+		}
+		expr[i] = res;
+	}
+}
+
+int solve() {
+
+}
 
 int main() {
 	freopen("input/030.txt", "r", stdin);
 	freopen("log.txt", "w", stderr); 
+
 	scanf("%d", &t);
-	
-	init();
-	
+
+	init(); trans();
+
+	printf("%d\n", solve());
 	return 0;
 }
