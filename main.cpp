@@ -1336,8 +1336,18 @@ struct Image {
 		n = _n, m = _m;
 	}
 
-	double simialr(Image &model) {
-		
+	double simialr(Image model) {
+		model.resize(1.0 * n / model.n, 1.0 * m / model.m);
+		double res = 0;
+		for (int i = 1; i <= n; i ++) {
+			for (int j = 1; j <= m; j ++) {
+				if (model.s[i][j] == s[i][j]) {
+					res += 1.0;
+				}
+			}
+		}
+		res /= 1.0 * n * m;
+		return res;
 	}
 };
 
@@ -1405,7 +1415,7 @@ void trans() {
 }
 
 int solve() {
-
+	
 }
 
 int main() {
