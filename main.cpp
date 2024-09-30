@@ -1202,7 +1202,6 @@ void init() {
 		digit[i] = temp_digit[1];
 		digit[i].log();
 		delete[] temp_digit;
-
 	}
 	number = new Image[3001];
 	input.split(tot, &number);
