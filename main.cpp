@@ -1414,8 +1414,68 @@ void trans() {
 	}
 }
 
+
+char op[N], num[N];
+int opTop, numTop, ansTop, ans[N];
+
+int pri(char c) {
+	if (c == '+') return 1;
+	if (c == '-') return 1;
+	if (c == '*') return 2;
+	if (c == '/') return 2;
+	if (c == '(') return 0;
+	if (c == ')') return 0;
+	return -1;
+}
+
 int solve() {
-	
+	int result = 0;
+	for (int i = 1; i <= tot; i ++) {
+		char c = expr[i];
+		if (c >= '0' && c <= '9') {
+			num[++ numTop] = c;
+		} else {
+			if (c == '(') {
+				op[++ opTop] = c;
+			} else if (c == ')') {
+				while (op[opTop] != '(') {
+					num[++ numTop] = op[opTop];
+					opTop --;	
+				}
+				opTop --;
+			} else {
+				while (opTop && pri(op[opTop]) >= pri(c)) {
+					num[++ numTop] = op[opTop];
+					opTop --;
+				}
+				op[++ opTop] = c;
+			}
+		}
+	}
+	while (opTop) {
+		num[++ numTop] = op[opTop --];
+	}
+	for (int i = 1; i <= numTop; i ++) {
+		if (num[i] >= '0' && num[i] <= '9') {
+			ans[++ ansTop] = num[i] - '0'; 
+		} else {
+			if (num[i] == '+') {
+				ans[ansTop - 1] += ans[ansTop];
+			} 
+			if (num[i] == '-') {
+				ans[ansTop - 1] -= ans[ansTop];
+			}
+			if (num[i] == '*') {
+				ans[ansTop - 1] *= ans[ansTop];
+			}
+			if (num[i] == '/') {
+				ans[ansTop - 1] /= ans[ansTop];
+			}
+			ansTop --; 
+		}
+	}
+	result = ans[ansTop];
+	return result;
 }
 
 int main() {
