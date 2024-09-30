@@ -1337,7 +1337,7 @@ struct Image {
 	}
 
 	double simialr(Image &model) {
-			
+		
 	}
 };
 
