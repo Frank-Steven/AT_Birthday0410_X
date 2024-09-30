@@ -9,6 +9,7 @@
     "workbench.productIconTheme": "fluent-icons",
     "workbench.iconTheme": "material-icon-theme",
     "files.associations": {
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "cmath": "cpp"
     }
 }

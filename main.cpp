@@ -1185,6 +1185,30 @@ struct Image {
 			}
 		}
 	}
+	constexpr int about_equal(double x) {
+		int tmp = int(x);
+		return tmp+(x-tmp>=0.5);
+	}
+	void resize(int w, int h) {
+		char tmp[m+1][n+1];
+		double x = 0, y = 0;
+		double x_m = (double)w/m, y_m = (double)h/n;
+		for(int i = 1; i <= m; ++i) {
+			for(int j = 1; j <= n; ++j) {
+				int l = about_equal(x), r = about_equal(x+x_m);
+				int u = about_equal(y), d = about_equal(y+y_m);
+				for(int x = l; x < r; ++x) {
+					for(int y = u; y < d; ++y) {
+						tmp[x][y] = s[i][j];
+					}
+				}
+				y += y_m;
+			}
+			x += x_m;
+		}
+		memcpy(s,tmp,sizeof tmp);
+		n = h, m = w;
+	}
 };
 
 Image input, digit[17], *number, *temp_digit;
@@ -1202,7 +1226,6 @@ void init() {
 		digit[i] = temp_digit[1];
 		digit[i].log();
 		delete[] temp_digit;
-
 	}
 	number = new Image[3001];
 	input.split(tot, &number);
